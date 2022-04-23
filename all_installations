@@ -1,0 +1,87 @@
+sudo apt update
+
+sudo apt install openjdk-8-jdk openjdk-8-jre
+
+java -version
+
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATHA=$PATH:/usr/llib/jvm/java-8-openjdk-amd64/bin
+
+--------------------------------------------------------------------------------------------
+
+sudo apt install git
+
+git --version
+
+------------------------------------------------------------------------------------------
+
+sudo apt update
+sudo apt install maven
+mvn -version
+
+------------------------------------------------------------------------------------------------
+
+wget https://get.jenkins.io/war-stable/2.332.2/jenkins.war
+
+java -jar jenkins.war
+
+-----------------------------------------------------------------------------------------------
+sudo apt update
+
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+
+sudo apt update
+
+apt-cache policy docker-ce
+
+sudo apt install docker-ce
+
+sudo systemctl status docker
+
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04 --> refer this link for docker
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+cd /opt
+
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.62/bin/apache-tomcat-9.0.62.tar.gz
+
+tar -xvzf apache-tomcat-9.0.62.tar.gz
+
+mv apache-tomcat-9.0.62.tar.gz tomcat-9
+
+cd /tomcat-9/bin
+
+sh start.sh
+
+under ---->  /opt/tomcat/conf# cat tomcat-users.xml
+
+<tomcat-users>
+<role rolename="manager-gui"/>
+<user username="admin" password="Admin" roles="manager-gui, manager-script, manager-admin, manager-status"/>
+</tomcat-users>
+
+
+under -----> /opt/tomcat/webapps/manager/META-INF# cat context.xml
+
+<Context antiResourceLocking="false" privileged="true" >
+  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow=".*" />
+</Context>
+
+
+How to change the port number
+
+cd /home/root/opt/tomcat/conf/sudo vi server.xml
+
+change port number 
+
+connector port = 8080
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
