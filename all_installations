@@ -84,7 +84,7 @@ connector port = 8080
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-nexus installation
+nexus installation (nexus port number:8081)
 
 sudo apt-get install openjdk-8-jdk
 
