@@ -84,4 +84,29 @@ connector port = 8080
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
+nexus installation
+
+sudo apt-get install openjdk-8-jdk
+
+java -version
+
+wget https://download.sonatype.com/nexus/oss/nexus-2.14.21-02-bundle.tar.gz
+
+ mv nexus-2.14.21-02-bundle.tar.gz /usr/local/
+
+ tar -xvzf nexus-2.14.21-02-bundle.tar.gz
+ 
+ cd /usr/local/
+
+tar -xvzf nexus-2.14.21-02-bundle.tar.gz
+
+  ln -s nexus-2.14.21-02 nexus
+
+ cd nexus
+ 
+  bin/nexus start
+
+ export RUN_AS_USER=root
+ 
+ bin/nexus start
 
