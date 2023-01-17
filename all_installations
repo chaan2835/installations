@@ -135,5 +135,39 @@ http://<PUBLIC_IP_Address>:8081
 11)	here we no need to configure proxy server 
 12)	then select the type of repository for wt we need to build the project 
 
+-----------------------------------------------------------------------------------------------------------------
+
+sonarqube installation 
+
+1) sonarqube supports only java 11 so install it if not there 
+   sudo apt-get update
+   sudo apt-get upgrade
+   sudo apt-get install openjdk-11-jdk -y
+ sudo apt-get install openjdk-11-jre -y
+
+2) cd /tmp
+  sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.9.56886.zip
+ 
+ 3) sudo unzip sonarqube-8.9.9.56886.zip -d /opt
+  sudo mv /opt/sonarqube-8.9.9.56886 /opt/sonarqube
+ 
+ 4) create a user 
+ sudo groupadd sonar
+ sudo useradd -c "user to run SonarQube" -d /opt/sonarqube -g sonar sonar
+ sudo chown sonar:sonar /opt/sonarqube -R
+ 
+5) start the sonar 
+  sudo su sonar
+  cd /opt/sonarqube/bin/linux-x86-64/
+  ./sonar.sh start
+  ./sonar.sh status
+ 
+ 6) to check the logs 
+ tail /opt/sonarqube/logs/sonar.log
+ 
+reference: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
+
+  
+
 
 
