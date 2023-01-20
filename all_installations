@@ -187,8 +187,91 @@ sonarqube installation
  6) to check the logs 
  tail /opt/sonarqube/logs/sonar.log
  
-reference: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
+ 
+ Install & Setup Postgres Database for SonarQube
+ 1)Install Postgres database:
+ 
+ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'  
+ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+ sudo apt-get update
+ sudo apt-get -y install postgresql
+ 
+        to check the postgresql is installed or not 
+        systemctl status postgresql
+ 
+ 2) check for the user created by the postgresql  (cat /etc/passwd)
+ 3) And add the password for that user (passwd postgres) then update the password 
+ 4) after updating the password for the postgres user login with that user (su - postgres)
+ 5) Create a database user and database for sonarque
+     1)createuser sonar
+     2) after creating the user jump into the database(psql)
+ 6) Creating database for sonarque
+     ALTER USER sonar WITH ENCRYPTED PASSWORD 'admin';
+    CREATE DATABASE sonarqube OWNER sonar;
+    GRANT ALL PRIVILEGES ON DATABASE sonarqube to sonar;
+    
+ 7) Restart postgres database to take latest changes effect(restart as root user not in postgresql user)
+            systemctl restart postgresql 
+            systemctl status postgresql
+ 8) check whether it is running in "5432" port or not 
+        netstat -tulpn (if it is not installed install it using "apt install net-tools")
+9) Added below entries in /etc/sysctl.conf
+    i) go to the end of this file and paste these 
+    
+            vm.max_map_count=524288
+            fs.file-max=131072
+            ulimit -n 131072
+            ulimit -u 8192
+    ii) and save the file 
+ 
+ 10) Add below entries in /etc/security/limits.conf
+        i) go to the end of this file and paste these
+        
+                sonarqube   -   nofile   131072
+                sonarqube   -   nproc    8192
+         ii) and save the file 
+  11) To make all these changes to affect (use this command----init 6)
+  12) connect to the server and vi /opt/sonarqube/conf/sonar.properties
+        i)sonar.jdbc.username=sonar
+         sonar.jdbc.password=admin (which are created using step-6)
+    
+        ii) under here #----- PostgreSQL 9.3 or greater update this 
+                sonar.jdbc.url=jdbc:postgresql://localhost/sonarqube
+        iii) uncomment the below line
+        sonar.search.javaOpts=-Xmx512m -Xms512m -XX:MaxDirectMemorySize=256m -XX:+HeapDumpOnOutOfMemoryError
+13) Create a `/etc/systemd/system/sonarqube.service
+        cat >> /etc/systemd/system/sonarqube.service <<EOL
+        [Unit]
+        Description=SonarQube service
+        After=syslog.target network.target
 
+        [Service]
+        Type=forking
+        User=sonar
+        Group=sonar
+        PermissionsStartOnly=true
+        ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start 
+        ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+        StandardOutput=syslog
+        LimitNOFILE=65536
+        LimitNPROC=4096
+        TimeoutStartSec=5
+        Restart=always
+
+        [Install]
+        WantedBy=multi-user.target
+        EOL
+        
+    14) deleted the sonar user and add now 
+            i)sudo userdel sonar
+            ii)useradd -d /opt/sonarqube sonar
+            iii)chown -R sonar:sonar /opt/sonarqube
+            
+     15) now start the sonarqube 
+        i) systemctl daemon-reload 
+        ii) systemctl start sonarqube.service 
+reference: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
+github reference links: https://github.com/ravdy/DevOps
   
 
 
