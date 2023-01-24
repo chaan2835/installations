@@ -270,6 +270,8 @@ sonarqube installation (9000)
      15) now start the sonarqube 
         i) systemctl daemon-reload 
         ii) systemctl start sonarqube.service 
+        iii) check the service is up or not 
+                ps -ef | grep sonar
 reference: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
 github reference links: https://github.com/ravdy/DevOps
   
