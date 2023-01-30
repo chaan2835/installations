@@ -29,6 +29,8 @@ java -jar jenkins.war
 docker easy installation
 
 https://get.docker.com/
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
 
 
 unistall any docker older vesions
