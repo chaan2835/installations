@@ -32,6 +32,9 @@ https://get.docker.com/
 curl -fsSL https://get.docker.com -o get-docker.sh
 sh get-docker.sh
 
+sudo usermod -aG docker $USER
+sudo chmod 666 /var/run/docker.sock
+
 
 unistall any docker older vesions
 
