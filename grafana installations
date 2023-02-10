@@ -23,5 +23,8 @@ Installing MySQL Server (refer to this page for mysql installation-->https://lin
 apt update
 sudo apt install mysql-server -y
 systemctl is-active mysql then we will get active if it's fine 
+sudo mysql_secure_installation
+
+mysql -u root -pnew_password
 
 
