@@ -16,3 +16,25 @@ connect to the server using ip and port num
 =================================================================================================
 
 grafana configuration file is located at /etc/grafana/grafana.ini
+
+==========================================================================================
+Installing MySQL Server
+
+apt update
+sudo apt-get install -y apt-transport-https curl
+curl https://packages.grafana.com/gpg.key | sudo apt-key add -
+echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+
+sudo apt-get update
+sudo apt-get install grafana -y
+sudo systemctl start grafana-server
+
+sudo systemctl enable grafana-server
+
+
+Creating a new database in MySQL Database
+
+sudo mysql_secure_installation
+create database grafanadb CREATE USER 'grafana'@'localhost' IDENTIFIED BY 'grafana';
+GRANT ALL PRIVILEGES ON grafanadb.* TO 'grafana'@'localhost';
+FLUSH PRIVILEGES;
