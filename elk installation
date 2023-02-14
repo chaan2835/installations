@@ -1,0 +1,87 @@
+sudo apt-get update
+sudo apt-get upgrade -y
+sudo apt-get install default-jre -y 
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+echo "deb https://artifacts.elastic.co/packaes/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list 
+sudo apt-get update
+sudo apt-get install elasticsearch
+vi /etc/elasticsearch/elasticsearch.yml 
+	network.host: "localhost"
+	http.port: 9200 
+
+sudo service elasticsearch start (if failed due to memory do this)
+	vi /etc/elasticsearch/jvm.options
+	-Xms500m
+sudo service elasticsearch status 
+sudo service elasticsearch enable 
+sudo service elasticsearch restart 
+==========================================
+apt-get install logstash
+sudo service logstash start
+sudo service logstash status 
+sudo service logstash enable
+sudo service logstash restart 
+
+if it doesn't start do this 
+
+vi /etc/logstash/jvm.options 
+	-Xms500m 
+
+if still it doesn't start do this 
+
+/usr/share/logstash/bin/localhost --path.settings /etc/logstash/-t -f/etc/logstash/conf.d/ 
+
+
+vi /etc/logstash/conf.d/10-syslog.conf 
+
+input{
+	file{
+		type => "syslog"
+		path => ["/var/log/messages","/var/log/*.log"]
+	}
+}
+output{
+	stdout{
+		codec => rubydebug
+	}
+	elasticsearch{
+		hosts => "13.126.45.219"
+	}
+}
+=============================
+
+sudo apt-get install kibana
+sudo service kibana start
+sudo service kibana stauts
+sudo service kibana enable 
+sudo service kibana start 
+
+sudo vi /etc/kibana/kafka.yml 
+
+	sever.port: 5601
+	server.host: "localhost"
+	elasticsearch.hosts: ["https://localhost:9200"]
+==========================================
+
+	
+sudo apt-get install nginx apache2-utils
+sudo htpasswd -c /etc/nginx/htpasswd.users kibanaadmin	
+sudo vi /etc/nginx/sites-available/default 
+
+	server{
+		listen 80;
+			server_name kibana;
+		
+		error_log /var/log/nginx/kibana.error.log;
+		access_log /var/log/nginx/kibana.access.log;
+		
+		loaction /{
+			rewrite ^/(.*)/$1 break;
+			proxy_ignore_client_abort on;
+			proxy_pass http://localhost:5601;
+			proxy_set_header X-Real-IP $remote_addr;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header Host $http_host;
+		}
+		
+	}
