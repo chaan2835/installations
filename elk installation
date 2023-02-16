@@ -2,7 +2,7 @@ sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get install default-jre -y 
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb https://artifacts.elastic.co/packaes/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list 
+echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list 
 sudo apt-get update
 sudo apt-get install elasticsearch
 vi /etc/elasticsearch/elasticsearch.yml 
@@ -45,7 +45,7 @@ output{
 		codec => rubydebug
 	}
 	elasticsearch{
-		hosts => "13.126.45.219"
+		hosts => "localhost"
 	}
 }
 =============================
@@ -56,7 +56,7 @@ sudo service kibana stauts
 sudo service kibana enable 
 sudo service kibana start 
 
-sudo vi /etc/kibana/kafka.yml 
+sudo vi /etc/kibana/kibana.yml 
 
 	sever.port: 5601
 	server.host: "localhost"
@@ -75,7 +75,7 @@ sudo vi /etc/nginx/sites-available/default
 		error_log /var/log/nginx/kibana.error.log;
 		access_log /var/log/nginx/kibana.access.log;
 		
-		loaction /{
+		location /{
 			rewrite ^/(.*)/$1 break;
 			proxy_ignore_client_abort on;
 			proxy_pass http://localhost:5601;
