@@ -1,56 +1,25 @@
-# Integrate Artifactory with Jenkins
+ jfrog installation(8081/8082)
+ 
+ 1)	For installing “jfrog” we need atleast t2-small instance 
+2)	After creating t2-small instance update the instance 
+3)	Then install java 
 
-sudo apt-get install openjdk-8-jdk -y
+sudo apt-get install openjdk-8-jdk software-properties-common wget -y
+java – version
+4)	cd /opt 
+wget https://jfrog.bintray.com/artifactory/jfrog-artifactory-oss-6.9.6.zip
+5)	install the unzip package if it is not available in the instance 
+6)	then unzip the jfrog package 
+unzip jfrog-artifactory-oss-6.9.6.zip
+7)	Go inside to bin directory and start the services
 
-wget https://download.sonatype.com/nexus/3/nexus-3.47.1-01-unix.tar.gz
+cd /opt/jfrog-artifactory-oss-6.9.6/bin
+./artifactory.sh start
+8)	access artifactory from browser. For this we have to enable the port num “8081/8082”
 
-sudo tar -xvzf nexus-3.47.1-01-unix.tar.gz
-
- sudo mv nexus-3.47.1-01 nexus
-
-useradd nexus
-
-id nexus 
-
-passwd nexus 
-
-
-run the below commands when u r at /opt
-
-chown -R nexus:nexus nexus
-
-chown -R nexus:nexus sonatype-work
-
-go to bin dir and start nexus 
-
-sh nexus start 
-
-sh nexus status 
-
-======================================
-interating nexus to jenkins
-=====================================
-
-install nexus artifactory upload and nexus platform plugins
-
-stage("Nexus Artifact upload"){
-      steps{
-        echo "Artifact upload start-----------"
-        nexusArtifactUploader artifacts: [
-                                            [artifactId: 'funds', -->in pom.xml
-                                             classifier: '', 
-                                             file: '/root/.jenkins/workspace/icici-nexus/target/funds-1.0-SNAPSHOT.war', --> where war file is building
-                                             type: 'war']
-                                          ], 
-                            credentialsId: 'nexus-creds', 
-                            groupId: 'icic', --> in pom.xml
-                            nexusUrl: '65.2.175.145:8081/repository/maven-nexus-artifacts/', --> specify just like nexus server repository
-                            nexusVersion: 'nexus3', 
-                            protocol: 'http', 
-                            repository: 'maven-nexus-artifacts', --> nexus server repository name
-                            version: '1.${BUILD_NUMBER}-SNAPSHOT'
-        
-        echo "Artifact uploaded -------------"
-      }
-    }
+http://<PUBLIC_IP_Address>:8081
+9)	after all the setup Is completed click on next 
+10)	then set the password 
+11)	here we no need to configure proxy server 
+12)	then select the type of repository for wt we need to build the project
 
