@@ -1,0 +1,29 @@
+nexus installation (nexus port number:8081)
+
+sudo apt-get install openjdk-8-jdk -y
+
+
+wget https://download.sonatype.com/nexus/3/nexus-3.47.1-01-unix.tar.gz
+
+sudo tar -xvzf nexus-3.47.1-01-unix.tar.gz
+
+ sudo mv nexus-3.47.1-01 nexus
+
+useradd nexus
+
+id nexus 
+
+passwd nexus 
+
+
+run the below commands when u r at /opt
+
+chown -R nexus:nexus nexus
+
+chown -R nexus:nexus sonatype-work
+
+go to bin dir and start nexus 
+
+sh nexus start 
+
+sh nexus status 
