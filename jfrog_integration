@@ -1,52 +1,56 @@
 # Integrate Artifactory with Jenkins
 
+sudo apt-get install openjdk-8-jdk -y
 
-## pre-requisites
-1. An Artifactory server [Click here to setup](https://youtu.be/eB6CDSR8VCA)
-1. A Jenkins Server [Click here to setup](https://youtu.be/M32O4Yv0ANc)
+wget https://download.sonatype.com/nexus/3/nexus-3.47.1-01-unix.tar.gz
 
-## Integration Steps
-Login to Jenkins to integrate Artifactory with Jenkins  
+sudo tar -xvzf nexus-3.47.1-01-unix.tar.gz
 
-1. Install "Artifactory" plug-in   
-- `Manage Jenkins` -> `Jenkins Plugins` -> `available` -> `artifactory`
+ sudo mv nexus-3.47.1-01 nexus
 
-2. Configure Artifactory server credentials   
-- ` Manage Jenkins` -> `Configure System` -> `Artifactory`
-   - Artifactory Servers
-      - Server ID : `Artifactory-Server`
-      - URL : `Artifactory Server URL`
-      - Username : `admin`
-      - Password : `admin@123
-    
----
----
-### Create a Freestyle Project 
-  
-1. Create a new job 
-  - Job Name : `artifactory-project`
-  - Source code management 
-     - Git URL : [get URL here](https://github.com/yankils/hello-world.git)
- - Build Environment 
-     - Maven3-Artifactory Integration : `<provide Artifactory server and repository details
->`
- - Build --> Invoke Artifactory Maven3  
-       - Goals: ` clean install`
+useradd nexus
 
-2. Execute job 
----
----
-### Create a Maven Project
+id nexus 
 
-1. Create a new job 
-  - Job Name : `artifactory-project`
-  - Source code management 
-     - Git URL : [get URL here](https://github.com/yankils/hello-world.git)
- - Build Environment 
-     - Resolve artifacts from Artifactory : `<provide Artifactory server and repository details>`
- - Build 
-       - Goals: ` clean install`
- - Post-build Actions
-   - Deploy Artifacts to Artifactory : `<provide Artifactory server and repository details>`
+passwd nexus 
 
-2. Execute job 
+
+run the below commands when u r at /opt
+
+chown -R nexus:nexus nexus
+
+chown -R nexus:nexus sonatype-work
+
+go to bin dir and start nexus 
+
+sh nexus start 
+
+sh nexus status 
+
+======================================
+interating nexus to jenkins
+=====================================
+
+install nexus artifactory upload and nexus platform plugins
+
+stage("Nexus Artifact upload"){
+      steps{
+        echo "Artifact upload start-----------"
+        nexusArtifactUploader artifacts: [
+                                            [artifactId: 'funds', -->in pom.xml
+                                             classifier: '', 
+                                             file: '/root/.jenkins/workspace/icici-nexus/target/funds-1.0-SNAPSHOT.war', --> where war file is building
+                                             type: 'war']
+                                          ], 
+                            credentialsId: 'nexus-creds', 
+                            groupId: 'icic', --> in pom.xml
+                            nexusUrl: '65.2.175.145:8081/repository/maven-nexus-artifacts/', --> specify just like nexus server repository
+                            nexusVersion: 'nexus3', 
+                            protocol: 'http', 
+                            repository: 'maven-nexus-artifacts', --> nexus server repository name
+                            version: '1.${BUILD_NUMBER}-SNAPSHOT'
+        
+        echo "Artifact uploaded -------------"
+      }
+    }
+
