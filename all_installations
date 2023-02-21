@@ -118,29 +118,33 @@ connector port = 8080
 
 nexus installation (nexus port number:8081)
 
-sudo apt-get install openjdk-8-jdk
+sudo apt-get install openjdk-8-jdk -y
 
-java -version
 
-wget https://download.sonatype.com/nexus/oss/nexus-2.14.21-02-bundle.tar.gz
+wget https://download.sonatype.com/nexus/3/nexus-3.47.1-01-unix.tar.gz
 
- mv nexus-2.14.21-02-bundle.tar.gz /usr/local/
+sudo tar -xvzf nexus-3.47.1-01-unix.tar.gz
 
- tar -xvzf nexus-2.14.21-02-bundle.tar.gz
- 
- cd /usr/local/
+ sudo mv nexus-3.47.1-01 nexus
 
-tar -xvzf nexus-2.14.21-02-bundle.tar.gz
+useradd nexus
 
-  ln -s nexus-2.14.21-02 nexus
+id nexus 
 
- cd nexus
- 
-  bin/nexus start
+passwd nexus 
 
- export RUN_AS_USER=root
- 
- bin/nexus start
+
+run the below commands when u r at /opt
+
+chown -R nexus:nexus nexus
+
+chown -R nexus:nexus sonatype-work
+
+go to bin dir and start nexus 
+
+sh nexus start 
+
+sh nexus status 
  ---------------------------------------------------------------------------
  jfrog installation(8081/8082)
  
