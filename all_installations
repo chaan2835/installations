@@ -20,6 +20,9 @@ sudo apt install maven
 mvn -version
 
 ------------------------------------------------------------------------------------------------
+apt install update
+apt install openjdk-11-jre-headless -->java 
+wget https://updates.jenkins.io/download/war/2.401.1/jenkins.war 
 
 wget https://get.jenkins.io/war-stable/2.332.2/jenkins.war
 
