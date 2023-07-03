@@ -291,6 +291,15 @@ sonarqube installation (9000)
                 ps -ef | grep sonar
 reference: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
 github reference links: https://github.com/ravdy/DevOps
+
+
+in jenkins pipeline if we are using qualitygate check 
+we have to follow these in sonarqube api
+click on administration-->configuration-->webhooks-->create 
+name must be same as our project name which we mentioned while generating the token
+url jenkinsurl/sonarqube-webhook/
+token give the generated token
+
 ============================================================================================================
 
 Grafana installation (port num:3000)
