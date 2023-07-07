@@ -121,33 +121,64 @@ connector port = 8080
 
 nexus installation (nexus port number:8081)
 
-sudo apt-get install openjdk-8-jdk -y
+ apt install openjdk-8-jre-headless
 
+cd /opt 
 
-wget https://download.sonatype.com/nexus/3/nexus-3.47.1-01-unix.tar.gz
+wget https://download.sonatype.com/nexus/3/nexus-3.57.0-01-unix.tar.gz
 
-sudo tar -xvzf nexus-3.47.1-01-unix.tar.gz
+tar -xvzf nexus-3.57.0-01-unix.tar.gz
 
- sudo mv nexus-3.47.1-01 nexus
+mv nexus-3.57.0-01 nexus
 
-useradd nexus
+adduser nexus 
 
-id nexus 
+visudo 
+	# User privilege specification
+	root    ALL=(ALL:ALL) ALL
+	nexus   ALL=(ALL:ALL) ALL
 
-passwd nexus 
+sudo chown -R nexus:nexus /opt/nexus
 
+sudo chown -R nexus:nexus /opt/sonatype-work
 
-run the below commands when u r at /opt
+sudo vi /opt/nexus/bin/nexus.rc
+	run_as_user="nexus"
+	
+vi /opt/nexus/bin/nexus.vmoptions
+	-Xms1024m
+	-Xmx1024m
+	-XX:MaxDirectMemorySize=1024m
 
-chown -R nexus:nexus nexus
+	-XX:LogFile=./sonatype-work/nexus3/log/jvm.log
+	-XX:-OmitStackTraceInFastThrow
+	-Djava.net.preferIPv4Stack=true
+	-Dkaraf.home=.
+	-Dkaraf.base=.
+	-Dkaraf.etc=etc/karaf
+	-Djava.util.logging.config.file=/etc/karaf/java.util.logging.properties
+	-Dkaraf.data=./sonatype-work/nexus3
+	-Dkaraf.log=./sonatype-work/nexus3/log
+	-Djava.io.tmpdir=./sonatype-work/nexus3/tmp
 
-chown -R nexus:nexus sonatype-work
+vi /etc/systemd/system/nexus.service
 
-go to bin dir and start nexus 
+	[Unit]
+	Description=nexus service
+	After=network.target
 
-sh nexus start 
+	[Service]
+	Type=forking
+	LimitNOFILE=65536
+	ExecStart=/opt/nexus/bin/nexus start
+	ExecStop=/opt/nexus/bin/nexus stop
+	User=nexus
+	Restart=on-abort
 
-sh nexus status 
+	[Install]
+	WantedBy=multi-user.target
+
+cat /opt/nexus/sonatype-work/nexus3/admin.password 
  ---------------------------------------------------------------------------
  jfrog installation(8081/8082)
  
