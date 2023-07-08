@@ -120,6 +120,7 @@ connector port = 8080
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 nexus installation (nexus port number:8081)
+install nexus artifact uploader plugin
 
  apt install openjdk-8-jre-headless
 
