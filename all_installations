@@ -324,6 +324,12 @@ sonarqube installation (9000)
 reference: https://www.fosstechnix.com/how-to-install-sonarqube-on-ubuntu-22-04-lts/
 github reference links: https://github.com/ravdy/DevOps
 
+integrating sonar with jenkins
+downalod the sonarqube plugin 
+open the sonarqube server and create a token 
+add the token in jenkins -->manage jenkins-->credentials-->select secret key and add 
+manage jenkins-->configure system--> sonarqube servers -->click the checkbox -->add sonarqube-->specify the name and give the sonar url
+manage jenkins-->tool configuration--> sonarqube scanner
 
 in jenkins pipeline if we are using qualitygate check 
 we have to follow these in sonarqube api
