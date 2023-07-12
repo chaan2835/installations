@@ -28,6 +28,13 @@ wget https://get.jenkins.io/war-stable/2.332.2/jenkins.war
 
 java -jar jenkins.war
 
+uploading artifact to s3 
+creating a bucket 
+go to s3 and add one bucket and then go to IAM and create a user -->programatic access --> attach existing policies -->amazons3full access
+manage plugins--> s3 publisher
+configure system--> amazon s3 profiles--> click on add--> give s3 bucket name,access key,secret key
+go to the job and click on pipeline syntax find s3upload:publish --> specify the source ,bucketname 
+
 -----------------------------------------------------------------------------------------------
 docker easy installation
 
