@@ -35,6 +35,17 @@ manage plugins--> s3 publisher
 configure system--> amazon s3 profiles--> click on add--> give s3 bucket name,access key,secret key
 go to the job and click on pipeline syntax find s3upload:publish --> specify the source ,bucketname 
 
+sending notification to slack 
+
+install slack notification plugin 
+click on the plugin then we will get a pop frm the pop up open the link to integrate slack with jenkins
+in post to channel section select the channel to where we need to send the notification and click on jenkins integration
+these two will be generated "Team Subdomain: roadtodevops
+Integration Token Credential ID: Create a secret text credential using kHh73A8KfkwUJGTfTOisjGBj"
+go to jenkins dashboard and click on configure system
+specify the workspace for the slack and add the creds using secrettext 
+then specify the channel name 
+
 -----------------------------------------------------------------------------------------------
 docker easy installation
 
