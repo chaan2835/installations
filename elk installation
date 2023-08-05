@@ -85,3 +85,137 @@ sudo vi /etc/nginx/sites-available/default
 		}
 		
 	}
+
+
+====================================================================================================================================================
+prerequsites
+ubuntu server 22.04 LTS
+java 8 or higher 
+2cpu and 4gbram
+
+sudo apt update 
+install the apt-transport-https package to access repository over https
+sudo apt install apt-transport-https
+
+java install 
+sudo apt install openjdk-11-jdk
+settingup java env variables 
+sudo vi /etc/environment
+
+paste the below variable 
+JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
+
+load the env variable 
+source /etc/environment
+
+lets verify JAVA_HOME variable 
+echo $JAVA_HOME 
+o.p:
+/usr/lib/jvm/java-11-openjdk-amd64
+
+installing elasticserach 8 on ubuntu 
+downlaod and install public signing key 
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
+
+save the repo defination to /etc/apt/sources.list.d/elastic-8.x.list:
+echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-8.x.list
+
+installing elasticsearch 
+sudo apt-get update
+sudo apt-get install elasticsearch 
+sudo systemctl start elasticsearch 
+sudo systemctl enable elastisearch 
+sudo systemctl status elastisearch 
+
+configure elasticsearch 
+sudo vi /etc/elasticsearch/elasticsearch.yml
+goto network section and uncomment network.host and replace our system ip with network.host:0.0.0.0
+and we need to add this line discovery.seed_hosts: [ ]
+xpack.security.enabled: false
+sudo systemctl restart elasticsearch 
+
+testing elasticsearch 
+curl -X GET "localhost:9200"
+op:
+
+{
+  "name" : "ip-172-31-44-221",
+  "cluster_name" : "elasticsearch",
+  "cluster_uuid" : "PqXiXlSiQmmu6IVDOzC42Q",
+  "version" : {
+    "number" : "8.9.0",
+    "build_flavor" : "default",
+    "build_type" : "deb",
+    "build_hash" : "8aa461beb06aa0417a231c345a1b8c38fb498a0d",
+    "build_date" : "2023-07-19T14:43:58.555259655Z",
+    "build_snapshot" : false,
+    "lucene_version" : "9.7.0",
+    "minimum_wire_compatibility_version" : "7.17.0",
+    "minimum_index_compatibility_version" : "7.0.0"
+  },
+  "tagline" : "You Know, for Search"
+}
+
+unistall elasticsearch 
+sudo apt-get--purge autoremove elasticsearch 
+sudo apt-get remove --purge elasticsearch
+sudo rm -rf /etc/elasticsearch
+
+istalling logstash 
+it is used to collect data from different sources 
+
+sudo apt-get install logstash 
+sudo systemctl start logstash 
+sudo systemctl enable logstash 
+sudo systemctl status logstash 
+
+configure logstash 
+sudo vi /etc/logstash/logstash.yml (no need to change anything)
+
+install kibana 
+sudo apt-get install kibana
+sudo systemctl start kibana
+sudo systemctl enable kibana
+sudo systemctl status kibana
+
+configure kibana
+sudo vi /etc/kibana/kibana.yml
+uncomment the below lines and replace localhost with 0.0.0.0 (server.host:"0.0.0.0")
+server.port:5601
+server.host:"localhost"
+elasticsearch.hosts:["http://localhost:9200"]
+sudo systemctl restart kibana
+
+install filebeat 
+sudo apt-get install filebeat 
+
+configuring filebeat 
+sudo vi /etc/filebeat/filebeat.yml
+
+under the elasticserach option comment the following lines
+#output.elasticsearch:
+#Array of hosts to connect to .
+#hosts:["localhost:9200"]
+
+under logstash uncommnet the following lines 
+output.logstash
+hosts:["localhost/0.0.0.0:5044"]
+enable filebeat modules 
+sudo filebeat modules enable system
+
+load the index template 
+sudo filebeat setup --index-management -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["0.0.0.0:9200"]'
+
+o.p:
+Overwriting ILM policy is disabled. Set `setup.ilm.overwrite: true` for enabling.
+
+sudo systemctl start filebeat
+sudo systemctl enable filebeat
+
+curl -XGET http://ipaddress:9200/_cat/indices?v
+
+o.p:
+health status index                                uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+yellow open   .ds-filebeat-8.9.0-2023.08.05-000001 II6ScC3nQAKUqy_RbCpkHg   1   1          0            0       225b           225b
+
+test kibana 
